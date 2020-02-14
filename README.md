@@ -4,7 +4,7 @@
 
 ## TOC
 
-- [ ] Stage 1: Encrypted!
+- [x] Stage 1: Encrypted!
 - [ ] Stage 2: Knowledge is key
 - [ ] Stage 3: Decrypted!
 - [ ] Stage 4: I command you
