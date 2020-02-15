@@ -1,4 +1,4 @@
-package stage2.hw1.hw2;
+package stage2.hw2;
 
 import java.util.Scanner;
 
