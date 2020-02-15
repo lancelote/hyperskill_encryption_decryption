@@ -5,8 +5,7 @@ public class Main {
         String message = "we found a treasure!";
         StringBuilder cipherText = new StringBuilder();
 
-        for (int i = 0; i < message.length(); i++) {
-            char c = message.charAt(i);
+        for (char c : message.toCharArray()) {
             if (Character.isAlphabetic(c)) {
                 c = (char) (123 - (c - 96));
             }
