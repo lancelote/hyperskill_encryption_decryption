@@ -25,7 +25,7 @@ public class Main {
         }
     }
 
-    private static String decipher(String message, int key) {
+    static String decipher(String message, int key) {
         StringBuilder plainText = new StringBuilder();
 
         for (char c : message.toCharArray()) {
@@ -35,7 +35,7 @@ public class Main {
         return plainText.toString();
     }
 
-    private static String encrypt(String message, int key) {
+    static String encrypt(String message, int key) {
         StringBuilder cipherText = new StringBuilder();
 
         for (char c : message.toCharArray()) {
