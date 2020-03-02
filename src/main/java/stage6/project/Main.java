@@ -57,21 +57,16 @@ class ShiftAlgorithm extends Algorithm {
 }
 
 class Enigma {
-    int key;
-    String mode;
-    String data;
-    String outPath;
-    Algorithm algorithm;
-
-    public Enigma(int key, String mode, String data, String outPath, Algorithm algorithm) {
-        this.key = key;
-        this.mode = mode;
-        this.data = data;
-        this.outPath = outPath;
-        this.algorithm = algorithm;
-    }
+    int key = 0;
+    String mode = "enc";
+    String data = "";
+    String inPath = "";
+    String outPath = "";
+    Algorithm algorithm = new ShiftAlgorithm();
 
     public void execute() {
+        readData();
+
         switch (this.mode) {
             case "enc":
                 String cipherText = algorithm.encrypt(data, key);
@@ -87,7 +82,10 @@ class Enigma {
         }
     }
 
-    static void output(String message, String outPath) {
+    /**
+     * Output encryption/decryption results to STDERR of "-out"
+     */
+    private static void output(String message, String outPath) {
         if (outPath.equals("")) {
             System.out.println(message);
         } else {
@@ -101,17 +99,24 @@ class Enigma {
             }
         }
     }
-}
 
-// ToDo: simplify args processing?
-public class Main {
-    public static void main(String[] args) {
-        String mode = "enc";
-        String data = "";
-        String outPath = "";
-        Algorithm algorithm = null;
-        int key = 0;
+    /**
+     * Read data from the file if "-in" was given and "-data" was not
+     */
+    private void readData() {
+        if (data.equals("")) {  // prefer "-data" over "-in"
+            String fileName = inPath;
+            File file = new File(fileName);
+            try (Scanner scanner = new Scanner(file)) {
+                data = scanner.nextLine();
+            } catch (FileNotFoundException e) {
+                System.err.println(fileName + " not found");
+                System.exit(1);
+            }
+        }
+    }
 
+    public void parseArgs(String[] args) {
         for (int i = 0; i < args.length; i += 2) {
             switch (args[i]) {
                 case "-alg":
@@ -134,18 +139,7 @@ public class Main {
                     key = Integer.parseInt(args[i + 1]);
                     break;
                 case "-in":
-                    if (!data.equals("")) {
-                        break;  // prefer "-data"
-                    }
-
-                    String fileName = args[i + 1];
-                    File file = new File(fileName);
-                    try (Scanner scanner = new Scanner(file)) {
-                        data = scanner.nextLine();
-                    } catch (FileNotFoundException e) {
-                        System.err.println(fileName + " not found");
-                        System.exit(1);
-                    }
+                    inPath = args[i + 1];
                     break;
                 case "-data":
                     data = args[i + 1];
@@ -158,8 +152,13 @@ public class Main {
                     System.exit(1);
             }
         }
+    }
+}
 
-        Enigma enigma = new Enigma(key, mode, data, outPath, algorithm);
+public class Main {
+    public static void main(String[] args) {
+        Enigma enigma = new Enigma();
+        enigma.parseArgs(args);
         enigma.execute();
     }
 }
